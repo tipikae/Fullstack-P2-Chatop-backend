@@ -1,5 +1,6 @@
 package com.tipikae.chatop.services;
 
+import com.tipikae.chatop.models.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -12,13 +13,21 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * JWT service.
+ */
 @Service
 public class JWTService {
 
     @Autowired
     private JwtEncoder jwtEncoder;
 
-    public String generateToken(Authentication authentication) {
+    /**
+     * Generate a token.
+     * @param authentication Authentication object.
+     * @return Token
+     */
+    public Token generateToken(Authentication authentication) {
         Instant now = Instant.now();
         JwtClaimsSet claims =
                 JwtClaimsSet.builder()
@@ -30,6 +39,6 @@ public class JWTService {
         JwtEncoderParameters jwtEncoderParameters =
                 JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        return new Token(this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue());
     }
 }
