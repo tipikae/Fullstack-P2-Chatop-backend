@@ -1,5 +1,6 @@
 package com.tipikae.chatop.controllers;
 
+import com.tipikae.chatop.models.Token;
 import com.tipikae.chatop.services.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,12 @@ public class AuthController {
     private JWTService jwtService;
 
     @PostMapping("/login")
-    public String login(Authentication authentication) {
+    public Token login(Authentication authentication) {
         return jwtService.generateToken(authentication);
+    }
+
+    @PostMapping("/register")
+    public String register() {
+        return "registered";
     }
 }
