@@ -2,11 +2,14 @@ package com.tipikae.chatop.configuration;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +22,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -26,6 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Spring security configuration class.
  */
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig {
 
     @Value("${jwt.key}")
@@ -42,9 +47,14 @@ public class SpringSecurityConfig {
     public SecurityFilterChain noAuthFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher("/auth/register")
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                //.securityMatcher("/h2-console/**")
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
+                    //auth.requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/**")).permitAll();
+                    //auth.requestMatchers(AntPathRequestMatcher.antMatcher("/auth/register")).permitAll();
+                })
                 .build();
     }
 
