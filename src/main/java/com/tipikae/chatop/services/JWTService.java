@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
  * JWT service.
  */
 @Service
-public class JWTService {
+public class JWTService implements IJWTService {
 
     @Autowired
     private JwtEncoder jwtEncoder;
@@ -27,6 +27,7 @@ public class JWTService {
      * @param authentication Authentication object.
      * @return Token
      */
+    @Override
     public Token generateToken(Authentication authentication) {
         Instant now = Instant.now();
         JwtClaimsSet claims =
