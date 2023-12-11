@@ -37,6 +37,7 @@ yarn-error.log
 testem.log
 /typings
 .gradle/
+build/
 
 # System files
 .DS_Store
