@@ -37,35 +37,52 @@ public class SpringSecurityConfig {
     private String jwtKey;
 
     /**
-     * Filter chain with no authentication required, order 1.
+     * Filter chain with no authentication required and without frame options header, order 1.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain noAuthFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain noAuthFilterChainWithoutFrameOptions(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //.securityMatcher("/h2-console/**")
+                .securityMatcher(PathRequest.toH2Console())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
-                    //auth.requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/**")).permitAll();
-                    //auth.requestMatchers(AntPathRequestMatcher.antMatcher("/auth/register")).permitAll();
+                    auth.requestMatchers(PathRequest.toH2Console()).permitAll();
                 })
                 .build();
     }
 
     /**
-     * Filter chain with basic authentication, order 2.
+     * Filter chain with no authentication required, order 2.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
     @Order(2)
+    public SecurityFilterChain noAuthFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .securityMatcher("/actuator/**", "/auth/register")
+                .authorizeHttpRequests(auth -> {
+                    auth.anyRequest().permitAll();
+                })
+                .build();
+    }
+
+    /**
+     * Filter chain with basic authentication, order 3.
+     * @param http HttpSecurity object.
+     * @return SecurityFilterChain
+     * @throws Exception
+     */
+    @Bean
+    @Order(3)
     public SecurityFilterChain httpBasicFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
@@ -77,13 +94,13 @@ public class SpringSecurityConfig {
     }
 
     /**
-     * Filter chain with jwt authentication, order 3.
+     * Filter chain with jwt authentication, order 4.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
-    @Order(3)
+    @Order(4)
     public SecurityFilterChain oauthFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
