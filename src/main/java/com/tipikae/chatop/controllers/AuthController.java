@@ -1,7 +1,7 @@
 package com.tipikae.chatop.controllers;
 
 import com.tipikae.chatop.models.Token;
-import com.tipikae.chatop.services.IJWTService;
+import com.tipikae.chatop.services.auth.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private IJWTService jwtService;
+    private IAuthService jwtService;
 
     @PostMapping("/login")
     public ResponseEntity<Token> login(Authentication authentication) {

@@ -1,4 +1,4 @@
-package com.tipikae.chatop.services;
+package com.tipikae.chatop.services.auth;
 
 import com.tipikae.chatop.models.Token;
 import org.springframework.security.core.Authentication;
@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 /**
  * JWT service interface.
  */
-public interface IJWTService {
+public interface IAuthService {
 
     /**
      * Generate a token.

@@ -1,11 +1,11 @@
-package com.tipikae.chatop.services;
+package com.tipikae.chatop.services.user;
 
 import com.tipikae.chatop.dto.user.NewUserDTO;
 import com.tipikae.chatop.dto.user.UserDTO;
 import com.tipikae.chatop.dto.user.converter.IUserDTOConverter;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
-import com.tipikae.chatop.exceptions.UserAlreadyExistsException;
-import com.tipikae.chatop.exceptions.UserNotFoundException;
+import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
+import com.tipikae.chatop.exceptions.user.UserNotFoundException;
 import com.tipikae.chatop.models.User;
 import com.tipikae.chatop.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

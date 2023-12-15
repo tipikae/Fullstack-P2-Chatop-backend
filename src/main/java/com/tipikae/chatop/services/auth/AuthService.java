@@ -1,4 +1,4 @@
-package com.tipikae.chatop.services;
+package com.tipikae.chatop.services.auth;
 
 import com.tipikae.chatop.models.Token;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
  * JWT service.
  */
 @Service
-public class JWTService implements IJWTService {
+public class AuthService implements IAuthService {
 
     @Autowired
     private JwtEncoder jwtEncoder;

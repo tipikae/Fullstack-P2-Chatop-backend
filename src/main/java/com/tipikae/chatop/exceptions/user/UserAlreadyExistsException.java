@@ -1,4 +1,6 @@
-package com.tipikae.chatop.exceptions;
+package com.tipikae.chatop.exceptions.user;
+
+import com.tipikae.chatop.exceptions.ChatopException;
 
 import java.io.Serial;
 
