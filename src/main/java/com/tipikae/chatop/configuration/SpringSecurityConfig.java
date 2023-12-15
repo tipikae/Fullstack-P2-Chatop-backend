@@ -2,11 +2,14 @@ package com.tipikae.chatop.configuration;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +22,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -26,36 +30,59 @@ import javax.crypto.spec.SecretKeySpec;
  * Spring security configuration class.
  */
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig {
 
     @Value("${jwt.key}")
     private String jwtKey;
 
     /**
-     * Filter chain with no authentication required, order 1.
+     * Filter chain with no authentication required and without frame options header, order 1.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain noAuthFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain noAuthFilterChainWithoutFrameOptions(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher("/auth/register")
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .securityMatcher(PathRequest.toH2Console())
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(PathRequest.toH2Console()).permitAll();
+                })
                 .build();
     }
 
     /**
-     * Filter chain with basic authentication, order 2.
+     * Filter chain with no authentication required, order 2.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
     @Order(2)
+    public SecurityFilterChain noAuthFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .securityMatcher("/actuator/**", "/auth/register")
+                .authorizeHttpRequests(auth -> {
+                    auth.anyRequest().permitAll();
+                })
+                .build();
+    }
+
+    /**
+     * Filter chain with basic authentication, order 3.
+     * @param http HttpSecurity object.
+     * @return SecurityFilterChain
+     * @throws Exception
+     */
+    @Bean
+    @Order(3)
     public SecurityFilterChain httpBasicFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
@@ -67,13 +94,13 @@ public class SpringSecurityConfig {
     }
 
     /**
-     * Filter chain with jwt authentication, order 3.
+     * Filter chain with jwt authentication, order 4.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
-    @Order(3)
+    @Order(4)
     public SecurityFilterChain oauthFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
