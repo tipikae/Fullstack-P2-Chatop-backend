@@ -28,4 +28,13 @@ public interface IUserService {
      * @throws ConverterDTOException thrown when a converter error occurred.
      */
     UserDTO getUserById(long id) throws UserNotFoundException, ConverterDTOException;
+
+    /**
+     * Get a user by its email.
+     * @param email User's email.
+     * @return UserDTO
+     * @throws UserNotFoundException thrown when a user is not found.
+     * @throws ConverterDTOException thrown when a converter error occurred.
+     */
+    UserDTO getUserByEmail(String email) throws UserNotFoundException, ConverterDTOException;
 }

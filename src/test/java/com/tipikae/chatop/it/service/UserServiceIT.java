@@ -36,5 +36,9 @@ public class UserServiceIT {
         // get user by id
         assertEquals(newUserDTO.getEmail(), userService.getUserById(userSaved.getId()).getEmail());
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(1000));
+
+        // get user by email
+        assertEquals(newUserDTO.getName(), userService.getUserByEmail(newUserDTO.getEmail()).getName());
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail("not-found@not-found.com"));
     }
 }

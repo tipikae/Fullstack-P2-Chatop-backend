@@ -34,8 +34,12 @@ public class UserRepositoryIT {
         assertNotNull(userSaved);
         assertEquals(user.getName(), userSaved.getName());
 
-        // get one
+        // get one by id
         assertTrue(userRepository.findById(userSaved.getId()).isPresent());
         assertEquals(1, userRepository.findByEmail(user.getEmail()).size());
+
+        // get one by email
+        assertTrue(userRepository.findFirstByEmail(user.getEmail()).isPresent());
+        assertEquals(user.getEmail(), userRepository.findFirstByEmail(user.getEmail()).get().getEmail());
     }
 }

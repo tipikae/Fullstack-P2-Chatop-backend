@@ -38,7 +38,7 @@ public class UserService implements IUserService {
     public UserDTO createUser(NewUserDTO newUserDTO) throws UserAlreadyExistsException, ConverterDTOException {
         List<User> users = userRepository.findByEmail(newUserDTO.getEmail());
         if (!users.isEmpty()) {
-            throw new UserAlreadyExistsException(String.format("User with email={} already exists.", newUserDTO.getEmail()));
+            throw new UserAlreadyExistsException(String.format("User with email=%s already exists.", newUserDTO.getEmail()));
         }
 
         User user = dtoConverter.convertNewDTOToModel(newUserDTO);
@@ -59,7 +59,25 @@ public class UserService implements IUserService {
     public UserDTO getUserById(long id) throws UserNotFoundException, ConverterDTOException {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException(String.format("User with id={} is not found.", id));
+            throw new UserNotFoundException(String.format("User with id=%d is not found.", id));
+        }
+
+        return dtoConverter.convertModelToDTO(optionalUser.get());
+    }
+
+    /**
+     * Get a user by its email.
+     *
+     * @param email User's email.
+     * @return UserDTO
+     * @throws UserNotFoundException thrown when a user is not found.
+     * @throws ConverterDTOException thrown when a converter error occurred.
+     */
+    @Override
+    public UserDTO getUserByEmail(String email) throws UserNotFoundException, ConverterDTOException {
+        Optional<User> optionalUser = userRepository.findFirstByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with email=%s is not found.", email));
         }
 
         return dtoConverter.convertModelToDTO(optionalUser.get());
