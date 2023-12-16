@@ -27,16 +27,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Email(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "Email must have an email format.")
-    @NotBlank(message = "Email must not be blank.")
     private String email;
 
-    @Size(min = 3, message = "Name length must be more than 3 characters.")
-    @NotBlank(message = "Name must not be blank.")
     private String name;
 
-    @Size(min = 3, message = "Password length must be more than 3 characters.")
-    @NotBlank(message = "Password must not be blank.")
     private String password;
 
     @Column(name = "created_at")
