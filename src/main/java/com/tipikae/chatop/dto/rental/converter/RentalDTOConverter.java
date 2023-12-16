@@ -8,6 +8,7 @@ import com.tipikae.chatop.models.Rental;
 import com.tipikae.chatop.models.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public class RentalDTOConverter implements IRentalDTOConverter{
             rental.setPicture(newRentalDTO.getPicture());
             rental.setDescription(newRentalDTO.getDescription());
             rental.setUser(owner);
+            rental.setCreatedAt(LocalDateTime.now());
         } catch (Exception e) {
             throw new ConverterDTOException(e.getMessage());
         }
@@ -62,6 +64,7 @@ public class RentalDTOConverter implements IRentalDTOConverter{
             rental.setPicture(updateRentalDTO.getPicture());
             rental.setDescription(updateRentalDTO.getDescription());
             rental.setUser(owner);
+            rental.setUpdatedAt(LocalDateTime.now());
         } catch (Exception e) {
             throw new ConverterDTOException(e.getMessage());
         }
