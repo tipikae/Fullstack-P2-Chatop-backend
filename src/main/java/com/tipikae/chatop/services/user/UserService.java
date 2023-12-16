@@ -42,7 +42,6 @@ public class UserService implements IUserService {
         }
 
         User user = dtoConverter.convertNewDTOToModel(newUserDTO);
-        user.setCreatedAt(LocalDateTime.now());
 
         return dtoConverter.convertModelToDTO(userRepository.save(user));
     }
