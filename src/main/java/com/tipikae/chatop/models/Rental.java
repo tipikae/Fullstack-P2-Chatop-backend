@@ -22,19 +22,14 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Name must not be blank.")
     private String name;
 
-    @NotNull(message = "Surface is required.")
     private int surface;
 
-    @NotNull(message = "Price is required.")
     private int price;
 
-    @NotBlank(message = "Picture must not be blank.")
     private String picture;
 
-    @NotBlank(message = "Description must not be blank.")
     private String description;
 
     @ManyToOne()
