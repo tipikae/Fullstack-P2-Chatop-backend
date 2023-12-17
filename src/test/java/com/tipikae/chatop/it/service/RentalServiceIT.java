@@ -7,6 +7,7 @@ import com.tipikae.chatop.dto.user.NewUserDTO;
 import com.tipikae.chatop.dto.user.UserDTO;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
+import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
 import com.tipikae.chatop.services.rental.IRentalService;
@@ -14,6 +15,13 @@ import com.tipikae.chatop.services.user.IUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,19 +36,19 @@ public class RentalServiceIT {
     private IUserService userService;
 
     @Test
-    void test() throws UserAlreadyExistsException, ConverterDTOException, UserNotFoundException, RentalNotFoundException {
+    void test() throws UserAlreadyExistsException, ConverterDTOException, UserNotFoundException, RentalNotFoundException, StorageException {
         String name = "rental";
         int surface = 100;
         int price = 1000;
-        String picture = "pic";
+        MultipartFile picture = new MockMultipartFile("file", "hello.txt", MediaType.TEXT_PLAIN_VALUE, "Hello World!".getBytes());
         String description = "desc";
         NewUserDTO newUserDTO = new NewUserDTO("test@test.com", "test", "1234");
         UserDTO owner = userService.createUser(newUserDTO);
         long owner_id = owner.getId();
 
         // create
-        NewRentalDTO newRentalDTO = new NewRentalDTO(name, surface, price, picture, description, owner_id);
-        RentalDTO rentalSaved = rentalService.createRental(newRentalDTO);
+        NewRentalDTO newRentalDTO = new NewRentalDTO(name, surface, price, picture, description);
+        RentalDTO rentalSaved = rentalService.createRental(newRentalDTO, owner_id);
         assertEquals(newRentalDTO.getDescription(), rentalSaved.getDescription());
 
         // get all
@@ -52,11 +60,9 @@ public class RentalServiceIT {
 
         // update rental
         String updatedName = "updated";
-        UpdateRentalDTO updatedRental = new UpdateRentalDTO(updatedName, surface, price, picture, description, owner_id);
+        UpdateRentalDTO updatedRental = new UpdateRentalDTO(updatedName, surface, price, description);
         rentalService.updateRental(rentalSaved.getId(), updatedRental);
         assertEquals(updatedName, rentalService.getRentalById(rentalSaved.getId()).getName());
         assertThrows(RentalNotFoundException.class, () -> rentalService.updateRental(1000, updatedRental));
-        updatedRental.setOwnerId(1000);
-        assertThrows(UserNotFoundException.class, () -> rentalService.updateRental(rentalSaved.getId(), updatedRental));
     }
 }

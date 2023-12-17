@@ -6,11 +6,13 @@ import com.tipikae.chatop.dto.rental.UpdateRentalDTO;
 import com.tipikae.chatop.dto.rental.converter.IRentalDTOConverter;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
+import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
 import com.tipikae.chatop.models.Rental;
 import com.tipikae.chatop.models.User;
 import com.tipikae.chatop.repositories.IRentalRepository;
 import com.tipikae.chatop.repositories.IUserRepository;
+import com.tipikae.chatop.services.storage.IStorageService;
 import com.tipikae.chatop.services.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,23 +35,29 @@ public class RentalService implements IRentalService {
     @Autowired
     private IRentalDTOConverter rentalDTOConverter;
 
+    @Autowired
+    private IStorageService storageService;
+
     /**
      * Create a new rental.
      *
      * @param newRentalDTO NewRentalDTO to create.
+     * @param ownerId Owner id.
      * @return RentalDTO
      * @throws ConverterDTOException thrown when a converter exception occurred.
      * @throws UserNotFoundException thrown when the owner is not found.
+     * @throws StorageException thrown when a storage exception occurred.
      */
     @Override
-    public RentalDTO createRental(NewRentalDTO newRentalDTO) throws ConverterDTOException, UserNotFoundException {
-        long owner_id = newRentalDTO.getOwnerId();
-        Optional<User> optionalUser = userRepository.findById(owner_id);
+    public RentalDTO createRental(NewRentalDTO newRentalDTO, long ownerId)
+            throws ConverterDTOException, UserNotFoundException, StorageException {
+        Optional<User> optionalUser = userRepository.findById(ownerId);
         if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException(String.format("Owner with id=%d is not found.", owner_id));
+            throw new UserNotFoundException(String.format("Owner with id=%d is not found.", ownerId));
         }
 
-        Rental rental = rentalDTOConverter.convertNewDTOToModel(newRentalDTO, optionalUser.get());
+        String pictureUrl = storageService.store(newRentalDTO.getPicture());
+        Rental rental = rentalDTOConverter.convertNewDTOToModel(newRentalDTO, optionalUser.get(), pictureUrl);
 
         return rentalDTOConverter.convertModelToRentalDTO(rentalRepository.save(rental));
     }
@@ -94,18 +102,12 @@ public class RentalService implements IRentalService {
      */
     @Override
     public void updateRental(long id, UpdateRentalDTO updateRentalDTO) throws RentalNotFoundException, ConverterDTOException, UserNotFoundException {
-        long owner_id = updateRentalDTO.getOwnerId();
-        Optional<User> optionalUser = userRepository.findById(owner_id);
-        if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException(String.format("Owner with id=%d is not found.", owner_id));
-        }
-
         Optional<Rental> optionalRental = rentalRepository.findById(id);
         if (optionalRental.isEmpty()) {
             throw new RentalNotFoundException(String.format("Rental with id=%d is not found.", id));
         }
 
-        Rental rental = rentalDTOConverter.convertUpdateDTOToModel(updateRentalDTO, optionalRental.get(), optionalUser.get());
+        Rental rental = rentalDTOConverter.convertUpdateDTOToModel(updateRentalDTO, optionalRental.get());
         rentalRepository.save(rental);
     }
 }
