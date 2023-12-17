@@ -18,20 +18,20 @@ public interface IRentalDTOConverter {
      * Convert a NewRentalDTO to a Rental model.
      * @param newRentalDTO NewRentalDTO object.
      * @param owner User owner.
+     * @param pictureUrl Picture url String.
      * @return Rental
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
-    Rental convertNewDTOToModel(NewRentalDTO newRentalDTO, User owner) throws ConverterDTOException;
+    Rental convertNewDTOToModel(NewRentalDTO newRentalDTO, User owner, String pictureUrl) throws ConverterDTOException;
 
     /**
      * Convert an UpdateRentalDTO to a Rental model.
      * @param updateRentalDTO UpdateRentalDTO object.
      * @param rental Rental model to update.
-     * @param owner User owner.
      * @return Rental
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
-    Rental convertUpdateDTOToModel(UpdateRentalDTO updateRentalDTO, Rental rental, User owner) throws ConverterDTOException;
+    Rental convertUpdateDTOToModel(UpdateRentalDTO updateRentalDTO, Rental rental) throws ConverterDTOException;
 
     /**
      * Convert a Rental model to a RentalDTO.

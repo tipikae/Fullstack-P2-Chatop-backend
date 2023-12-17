@@ -24,18 +24,19 @@ public class RentalDTOConverter implements IRentalDTOConverter{
      *
      * @param newRentalDTO NewRentalDTO object.
      * @param owner User owner.
+     * @param pictureUrl Picture url String.
      * @return Rental
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @Override
-    public Rental convertNewDTOToModel(NewRentalDTO newRentalDTO, User owner) throws ConverterDTOException {
+    public Rental convertNewDTOToModel(NewRentalDTO newRentalDTO, User owner, String pictureUrl) throws ConverterDTOException {
         Rental rental = new Rental();
 
         try {
             rental.setName(newRentalDTO.getName());
             rental.setSurface(newRentalDTO.getSurface());
             rental.setPrice(newRentalDTO.getPrice());
-            rental.setPicture(newRentalDTO.getPicture());
+            rental.setPicture(pictureUrl);
             rental.setDescription(newRentalDTO.getDescription());
             rental.setUser(owner);
             rental.setCreatedAt(LocalDateTime.now());
@@ -51,19 +52,16 @@ public class RentalDTOConverter implements IRentalDTOConverter{
      *
      * @param updateRentalDTO UpdateRentalDTO object.
      * @param rental          Rental model to update.
-     * @param owner            User owner.
      * @return Rental
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @Override
-    public Rental convertUpdateDTOToModel(UpdateRentalDTO updateRentalDTO, Rental rental, User owner) throws ConverterDTOException {
+    public Rental convertUpdateDTOToModel(UpdateRentalDTO updateRentalDTO, Rental rental) throws ConverterDTOException {
         try {
             rental.setName(updateRentalDTO.getName());
             rental.setSurface(updateRentalDTO.getSurface());
             rental.setPrice(updateRentalDTO.getPrice());
-            rental.setPicture(updateRentalDTO.getPicture());
             rental.setDescription(updateRentalDTO.getDescription());
-            rental.setUser(owner);
             rental.setUpdatedAt(LocalDateTime.now());
         } catch (Exception e) {
             throw new ConverterDTOException(e.getMessage());
