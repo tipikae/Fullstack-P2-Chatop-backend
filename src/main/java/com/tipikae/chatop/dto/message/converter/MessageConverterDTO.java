@@ -8,6 +8,8 @@ import com.tipikae.chatop.models.Rental;
 import com.tipikae.chatop.models.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * Message converter DTO.
  */
@@ -25,7 +27,18 @@ public class MessageConverterDTO implements IMessageConverterDTO {
      */
     @Override
     public Message convertNewMessageDTOTOModel(NewMessageDTO newMessageDTO, User sender, Rental rental) throws ConverterDTOException {
-        return null;
+        Message message = new Message();
+
+        try {
+            message.setMessage(newMessageDTO.getMessage());
+            message.setUser(sender);
+            message.setRental(rental);
+            message.setCreatedAt(LocalDateTime.now());
+        } catch (Exception e) {
+            throw new ConverterDTOException(e.getMessage());
+        }
+
+        return message;
     }
 
     /**
@@ -37,6 +50,19 @@ public class MessageConverterDTO implements IMessageConverterDTO {
      */
     @Override
     public MessageDTO convertMessageToDTO(Message message) throws ConverterDTOException {
-        return null;
+        MessageDTO messageDTO = new MessageDTO();
+
+        try {
+            messageDTO.setId(message.getId());
+            messageDTO.setMessage(messageDTO.getMessage());
+            messageDTO.setUserId(message.getUser().getId());
+            messageDTO.setRentalId(message.getRental().getId());
+            messageDTO.setCreatedAt(message.getCreatedAt());
+            message.setUpdatedAt(message.getUpdatedAt());
+        } catch (Exception e) {
+            throw new ConverterDTOException(e.getMessage());
+        }
+
+        return messageDTO;
     }
 }

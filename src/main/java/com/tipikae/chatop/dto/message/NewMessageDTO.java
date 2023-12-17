@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewMessageDTO {
 
-    @NotNull(message = "Rental is required.")
-    private long rentalId;
+    @NotBlank(message = "Message must not be blank.")
+    @Size(max = 2000, message = "Message length must be less than 2000 characters.")
+    private String message;
 
     @NotNull(message = "Sender is required.")
     private long userId;
 
-    @NotBlank(message = "Message must not be blank.")
-    @Size(max = 2000, message = "Message length must be less than 2000 characters.")
-    private String message;
+    @NotNull(message = "Rental is required.")
+    private long rentalId;
 }
