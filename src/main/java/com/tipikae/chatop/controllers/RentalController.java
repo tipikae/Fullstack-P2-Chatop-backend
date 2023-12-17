@@ -5,17 +5,26 @@ import com.tipikae.chatop.dto.rental.RentalDTO;
 import com.tipikae.chatop.dto.rental.UpdateRentalDTO;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
+import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
+import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
 import com.tipikae.chatop.services.rental.IRentalService;
+import com.tipikae.chatop.services.storage.IStorageService;
+import com.tipikae.chatop.services.user.IUserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,6 +35,12 @@ public class RentalController {
     @Autowired
     private IRentalService rentalService;
 
+    @Autowired
+    private IStorageService storageService;
+
+    @Autowired
+    private IUserService userService;
+
     /**
      * Create a rental.
      * @param newRentalDTO NewRentalDTO object.
@@ -33,11 +48,15 @@ public class RentalController {
      * @throws UserNotFoundException thrown when owner is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
-    @PostMapping("")
-    public ResponseEntity<String> createRental(@RequestBody @Valid NewRentalDTO newRentalDTO)
-            throws UserNotFoundException, ConverterDTOException {
+    @PostMapping( value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
+    public ResponseEntity<String> createRental(
+            @ModelAttribute @Valid NewRentalDTO newRentalDTO,
+            Principal principal)
+                throws UserNotFoundException, ConverterDTOException, StorageException {
+
+        long ownerId = userService.getUserByEmail(principal.getName()).getId();
+        rentalService.createRental(newRentalDTO, ownerId);
         String message = "Rental created !";
-        rentalService.createRental(newRentalDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -75,14 +94,28 @@ public class RentalController {
      * @throws RentalNotFoundException thrown when rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
-    @PutMapping("/{id}")
+    @PutMapping( value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<String> updateRental(
             @PathVariable("id") @NotNull @Positive long id,
-            @RequestBody @Valid UpdateRentalDTO updateRentalDTO )
-            throws UserNotFoundException, RentalNotFoundException, ConverterDTOException {
+            @ModelAttribute @Valid UpdateRentalDTO updateRentalDTO )
+                throws UserNotFoundException, RentalNotFoundException, ConverterDTOException {
 
-        String message = "Rental updated !";
         rentalService.updateRental(id, updateRentalDTO);
+        String message = "Rental updated !";
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    /**
+     * Download a picture.
+     * @param filename File name.
+     * @return ResponseEntity<Resource>
+     * @throws FileNotFoundException thrown when file is not found.
+     * @throws StorageException thrown when a storage exception occurred.
+     */
+    @GetMapping("/uploads/{filename}")
+    public ResponseEntity<Resource> loadPicture(@PathVariable("filename") @NotBlank String filename)
+            throws FileNotFoundException, StorageException {
+        Resource resource = storageService.load(filename);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 }
