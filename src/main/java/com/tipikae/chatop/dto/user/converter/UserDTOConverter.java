@@ -6,6 +6,8 @@ import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.models.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * User DTO converter.
  */
@@ -27,6 +29,7 @@ public class UserDTOConverter implements IUserDTOConverter {
             user.setEmail(newUserDTO.getEmail());
             user.setName(newUserDTO.getName());
             user.setPassword(newUserDTO.getPassword());
+            user.setCreatedAt(LocalDateTime.now());
         } catch(Exception e) {
             throw new ConverterDTOException(e.getMessage());
         }

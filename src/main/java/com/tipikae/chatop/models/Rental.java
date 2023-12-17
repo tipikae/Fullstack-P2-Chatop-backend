@@ -1,9 +1,8 @@
 package com.tipikae.chatop.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,27 +10,31 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * User model.
+ * Rental model.
  */
 @Entity
-@Table(
-        name = "USERS",
-        indexes = @Index(name = "USERS_index", columnList = "email", unique = true)
-)
-@Data
+@Table(name = "RENTALS")
+@Data@NoArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-public class User {
+public class Rental {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String email;
-
     private String name;
 
-    private String password;
+    private int surface;
+
+    private int price;
+
+    private String picture;
+
+    private String description;
+
+    @ManyToOne()
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User user;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

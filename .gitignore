@@ -38,6 +38,7 @@ testem.log
 /typings
 .gradle/
 build/
+uploads/
 
 # System files
 .DS_Store
