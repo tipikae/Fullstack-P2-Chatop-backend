@@ -2,6 +2,8 @@ package com.tipikae.chatop.errorHandler;
 
 import com.tipikae.chatop.exceptions.AuthenticationException;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
+import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
+import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -54,9 +56,23 @@ public class ControllerExceptionHandler {
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     Error exceptionHandler(AuthenticationException e) {
-        return new Error(HttpStatus.BAD_REQUEST.value(), "Authentication error.");
+        return new Error(HttpStatus.UNAUTHORIZED.value(), "Authentication error.");
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(StorageException.class)
+    Error exceptionHandler(StorageException e) {
+        return new Error(HttpStatus.BAD_REQUEST.value(), "Storage error.");
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(FileNotFoundException.class)
+    Error exceptionHandler(FileNotFoundException e) {
+        return new Error(HttpStatus.NOT_FOUND.value(), "File not found.");
     }
 }
