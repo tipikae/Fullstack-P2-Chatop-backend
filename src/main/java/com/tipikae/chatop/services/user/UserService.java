@@ -9,9 +9,9 @@ import com.tipikae.chatop.exceptions.user.UserNotFoundException;
 import com.tipikae.chatop.models.User;
 import com.tipikae.chatop.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +26,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private IUserDTOConverter dtoConverter;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Create a user.
@@ -42,6 +45,7 @@ public class UserService implements IUserService {
         }
 
         User user = dtoConverter.convertNewDTOToModel(newUserDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return dtoConverter.convertModelToDTO(userRepository.save(user));
     }
