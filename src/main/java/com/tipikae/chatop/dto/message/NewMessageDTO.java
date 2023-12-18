@@ -20,8 +20,8 @@ public class NewMessageDTO {
     private String message;
 
     @NotNull(message = "Sender is required.")
-    private long userId;
+    private long user_id;
 
     @NotNull(message = "Rental is required.")
-    private long rentalId;
+    private long rental_id;
 }

@@ -44,12 +44,12 @@ public class MessageServiceIT {
 
         NewMessageDTO newMessageDTO = new NewMessageDTO();
         newMessageDTO.setMessage(msg);
-        newMessageDTO.setUserId(sender.getId());
-        newMessageDTO.setRentalId(rental.getId());
+        newMessageDTO.setUser_id(sender.getId());
+        newMessageDTO.setRental_id(rental.getId());
 
         // save
         MessageDTO messageSaved = messageService.add(newMessageDTO);
         assertNotNull(messageSaved);
-        assertEquals(newMessageDTO.getRentalId(), messageSaved.getRentalId());
+        assertEquals(newMessageDTO.getRental_id(), messageSaved.getRentalId());
     }
 }

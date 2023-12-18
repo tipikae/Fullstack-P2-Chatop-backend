@@ -46,14 +46,14 @@ public class MessageService implements IMessageService {
      */
     @Override
     public MessageDTO add(NewMessageDTO newMessageDTO) throws ConverterDTOException, UserNotFoundException, RentalNotFoundException {
-        Optional<User> optionalUser = userRepository.findById(newMessageDTO.getUserId());
+        Optional<User> optionalUser = userRepository.findById(newMessageDTO.getUser_id());
         if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException(String.format("Sender with id=%d is not found.", newMessageDTO.getUserId()));
+            throw new UserNotFoundException(String.format("Sender with id=%d is not found.", newMessageDTO.getUser_id()));
         }
 
-        Optional<Rental> optionalRental = rentalRepository.findById(newMessageDTO.getRentalId());
+        Optional<Rental> optionalRental = rentalRepository.findById(newMessageDTO.getRental_id());
         if (optionalRental.isEmpty()) {
-            throw new RentalNotFoundException(String.format("Rental with id=%d is not found.", newMessageDTO.getRentalId()));
+            throw new RentalNotFoundException(String.format("Rental with id=%d is not found.", newMessageDTO.getRental_id()));
         }
 
         Message message =
