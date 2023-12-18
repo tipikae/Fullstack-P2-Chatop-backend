@@ -8,6 +8,7 @@ import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
 import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
 import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
+import com.tipikae.chatop.models.RentalsResponse;
 import com.tipikae.chatop.models.Response;
 import com.tipikae.chatop.services.rental.IRentalService;
 import com.tipikae.chatop.services.storage.IStorageService;
@@ -63,13 +64,14 @@ public class RentalController {
 
     /**
      * Get all rentals.
-     * @return ResponseEntity<List<RentalDTO>>
+     * @return ResponseEntity<RentalsResponse>
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @GetMapping("")
-    public ResponseEntity<List<RentalDTO>> getAllRentals() throws ConverterDTOException {
+    public ResponseEntity<RentalsResponse> getAllRentals() throws ConverterDTOException {
         List<RentalDTO> rentals = rentalService.getAllRentals();
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
+        RentalsResponse rentalsResponse = new RentalsResponse(rentals);
+        return new ResponseEntity<>(rentalsResponse, HttpStatus.OK);
     }
 
     /**
