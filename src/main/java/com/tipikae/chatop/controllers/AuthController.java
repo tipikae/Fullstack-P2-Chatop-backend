@@ -12,6 +12,7 @@ import com.tipikae.chatop.services.user.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +51,7 @@ public class AuthController {
      * @throws ConverterDTOException thrown when an DTO converter exception occurred.
      * @throws AuthenticationException thrown when an authentication exception occurred.
      */
-    @PostMapping(value = "/register", consumes = {"application/json"})
+    @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Token> register(@RequestBody @Valid NewUserDTO newUserDTO)
             throws UserAlreadyExistsException, ConverterDTOException, AuthenticationException {
 

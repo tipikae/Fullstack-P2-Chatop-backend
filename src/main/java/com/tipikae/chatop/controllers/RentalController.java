@@ -8,6 +8,7 @@ import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
 import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
 import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
+import com.tipikae.chatop.models.Response;
 import com.tipikae.chatop.services.rental.IRentalService;
 import com.tipikae.chatop.services.storage.IStorageService;
 import com.tipikae.chatop.services.user.IUserService;
@@ -44,20 +45,20 @@ public class RentalController {
     /**
      * Create a rental.
      * @param newRentalDTO NewRentalDTO object.
-     * @return ResponseEntity<String>
+     * @return ResponseEntity<Response>
      * @throws UserNotFoundException thrown when owner is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @PostMapping( value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
-    public ResponseEntity<String> createRental(
+    public ResponseEntity<Response> createRental(
             @ModelAttribute @Valid NewRentalDTO newRentalDTO,
             Principal principal)
                 throws UserNotFoundException, ConverterDTOException, StorageException {
 
         long ownerId = userService.getUserByEmail(principal.getName()).getId();
         rentalService.createRental(newRentalDTO, ownerId);
-        String message = "Rental created !";
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        Response response = new Response("Rental created !");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -89,20 +90,20 @@ public class RentalController {
      * Update a rental.
      * @param id Rental's id.
      * @param updateRentalDTO UpdateRentalDTO object.
-     * @return ResponseEntity<String>
+     * @return ResponseEntity<Response>
      * @throws UserNotFoundException thrown when owner is not found.
      * @throws RentalNotFoundException thrown when rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @PutMapping( value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
-    public ResponseEntity<String> updateRental(
+    public ResponseEntity<Response> updateRental(
             @PathVariable("id") @NotNull @Positive long id,
             @ModelAttribute @Valid UpdateRentalDTO updateRentalDTO )
                 throws UserNotFoundException, RentalNotFoundException, ConverterDTOException {
 
         rentalService.updateRental(id, updateRentalDTO);
-        String message = "Rental updated !";
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        Response response = new Response("Rental updated !");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
