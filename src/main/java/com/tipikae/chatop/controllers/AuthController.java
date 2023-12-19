@@ -2,6 +2,7 @@ package com.tipikae.chatop.controllers;
 
 import com.tipikae.chatop.dto.user.NewUserDTO;
 import com.tipikae.chatop.dto.user.UserDTO;
+import com.tipikae.chatop.errorHandler.Error;
 import com.tipikae.chatop.exceptions.AuthenticationException;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
@@ -10,6 +11,11 @@ import com.tipikae.chatop.models.LoginRequest;
 import com.tipikae.chatop.models.Token;
 import com.tipikae.chatop.services.auth.IAuthService;
 import com.tipikae.chatop.services.user.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +51,27 @@ public class AuthController {
      * @return ResponseEntity<Token>
      * @throws AuthenticationException thrown when an authentication exception occurred.
      */
+    @Operation(summary = "Login")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Login succeeded",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Token.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid parameters",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+    })
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Token> login(@RequestBody @Valid LoginRequest loginRequest)
             throws AuthenticationException {
@@ -64,6 +91,27 @@ public class AuthController {
      * @throws ConverterDTOException thrown when an DTO converter exception occurred.
      * @throws AuthenticationException thrown when an authentication exception occurred.
      */
+    @Operation(summary = "Register")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Register succeeded",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Token.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid parameters",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "User already exists",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))})
+    })
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Token> register(@RequestBody @Valid NewUserDTO newUserDTO)
             throws UserAlreadyExistsException, ConverterDTOException, AuthenticationException {
@@ -80,6 +128,27 @@ public class AuthController {
      * @throws UserNotFoundException thrown when an DTO converter exception occurred.
      * @throws ConverterDTOException thrown when an DTO converter exception occurred.
      */
+    @Operation(summary = "Get my profile")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Returns own profile",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))})
+    })
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me(Principal principal) throws UserNotFoundException, ConverterDTOException {
         String email = principal.getName();
