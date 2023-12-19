@@ -6,6 +6,7 @@ import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
 import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Handles controller exceptions.
  */
 @ControllerAdvice
+@Hidden
 public class ControllerExceptionHandler {
 
     @ResponseBody
