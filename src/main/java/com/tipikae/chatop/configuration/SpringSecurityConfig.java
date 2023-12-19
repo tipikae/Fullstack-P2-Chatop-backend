@@ -6,21 +6,22 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -36,6 +37,17 @@ public class SpringSecurityConfig {
     @Value("${jwt.key}")
     private String jwtKey;
 
+    @Bean
+    public AuthenticationManager authenticationManager(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+        return new ProviderManager(authenticationProvider);
+    }
+
     /**
      * Filter chain with no authentication required and without frame options header, order 1.
      * @param http HttpSecurity object.
@@ -46,12 +58,13 @@ public class SpringSecurityConfig {
     @Order(1)
     public SecurityFilterChain noAuthFilterChainWithoutFrameOptions(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf ->
+                        csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher(PathRequest.toH2Console())
+                .securityMatcher(AntPathRequestMatcher.antMatcher("/h2-console/**"))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(PathRequest.toH2Console()).permitAll();
+                    auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
                 })
                 .build();
     }
@@ -88,8 +101,8 @@ public class SpringSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityMatcher("/auth/login")
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                //.authenticationManager(authenticationManager(userDetailsService, passwordEncoder()))
                 .build();
     }
 
@@ -138,16 +151,5 @@ public class SpringSecurityConfig {
     @Bean
     public JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(new ImmutableSecret<>(this.jwtKey.getBytes()));
-    }
-
-    @Bean
-    public UserDetailsService users() {
-        UserDetails user =
-                User.builder()
-                        .username("test@test.com")
-                        .password(passwordEncoder().encode("test!31"))
-                        .roles("USER").build();
-
-        return new InMemoryUserDetailsManager(user);
     }
 }
