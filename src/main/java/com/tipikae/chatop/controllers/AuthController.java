@@ -6,14 +6,19 @@ import com.tipikae.chatop.exceptions.AuthenticationException;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
 import com.tipikae.chatop.exceptions.user.UserNotFoundException;
+import com.tipikae.chatop.models.LoginRequest;
 import com.tipikae.chatop.models.Token;
 import com.tipikae.chatop.services.auth.IAuthService;
 import com.tipikae.chatop.services.user.IUserService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +36,23 @@ public class AuthController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     /**
      * Login endpoint.
-     * @param authentication Authentication object.
+     * @param loginRequest LoginRequest object.
      * @return ResponseEntity<Token>
      * @throws AuthenticationException thrown when an authentication exception occurred.
      */
-    @PostMapping("/login")
-    public ResponseEntity<Token> login(Authentication authentication) throws AuthenticationException {
-        Token token = authService.generateTokenWithAuthentication(authentication);
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Token> login(@RequestBody @Valid LoginRequest loginRequest)
+            throws AuthenticationException {
+        Authentication authenticationRequest =
+                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getLogin(), loginRequest.getPassword());
+        Authentication authenticationResponse =
+                authenticationManager.authenticate(authenticationRequest);
+        Token token = authService.generateTokenWithAuthentication(authenticationResponse);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
