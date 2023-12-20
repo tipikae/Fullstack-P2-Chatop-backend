@@ -41,6 +41,11 @@ public class MyUserDetailsService implements UserDetailsService {
                 user.getEmail(), user.getPassword(), getAuthorities("USER"));
     }
 
+    /**
+     * Get Authorities list.
+     * @param role String
+     * @return List<GrantedAuthority>
+     */
     private static List<GrantedAuthority> getAuthorities (String role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role));

@@ -43,6 +43,12 @@ public class AuthService implements IAuthService {
         return generateToken(email);
     }
 
+    /**
+     * Generate a token
+     * @param email User's email.
+     * @return Token
+     * @throws AuthenticationException thrown when an Encoding exception occurred.
+     */
     private Token generateToken(String email) throws AuthenticationException {
         Instant now = Instant.now();
         JwtClaimsSet claims =

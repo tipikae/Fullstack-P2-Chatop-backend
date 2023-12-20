@@ -36,6 +36,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Rental controller.
+ */
 @RestController
 @RequestMapping("/rentals")
 @Validated

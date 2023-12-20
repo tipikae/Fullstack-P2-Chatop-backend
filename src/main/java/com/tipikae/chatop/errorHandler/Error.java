@@ -6,6 +6,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Error POJO returned by ControllerAdvice.
+ */
 @Data
 public class Error implements Serializable {
 

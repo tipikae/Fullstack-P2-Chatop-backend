@@ -2,6 +2,9 @@ package com.tipikae.chatop.exceptions;
 
 import java.io.Serial;
 
+/**
+ * Authentication exception.
+ */
 public class AuthenticationException extends ChatopException {
 
     @Serial
