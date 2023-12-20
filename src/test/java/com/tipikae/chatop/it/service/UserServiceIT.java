@@ -21,7 +21,7 @@ public class UserServiceIT {
 
     @Test
     void test() throws UserAlreadyExistsException, ConverterDTOException, UserNotFoundException {
-        String email = "test@test.com";
+        String email = "test6@test.com";
         String name = "name";
         String password = "password";
 

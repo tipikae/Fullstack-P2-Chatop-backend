@@ -18,7 +18,7 @@ public class UserRepositoryIT {
 
     @Test
     void test() {
-        String email = "test@test.com";
+        String email = "test1@test.com";
         String name = "name";
         String password = "password";
         LocalDateTime createdAt = LocalDateTime.now();
