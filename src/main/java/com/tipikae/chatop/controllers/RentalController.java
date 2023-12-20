@@ -3,6 +3,8 @@ package com.tipikae.chatop.controllers;
 import com.tipikae.chatop.dto.rental.NewRentalDTO;
 import com.tipikae.chatop.dto.rental.RentalDTO;
 import com.tipikae.chatop.dto.rental.UpdateRentalDTO;
+import com.tipikae.chatop.dto.user.UserDTO;
+import com.tipikae.chatop.errorHandler.Error;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
 import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
@@ -13,6 +15,11 @@ import com.tipikae.chatop.models.Response;
 import com.tipikae.chatop.services.rental.IRentalService;
 import com.tipikae.chatop.services.storage.IStorageService;
 import com.tipikae.chatop.services.user.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,6 +57,33 @@ public class RentalController {
      * @throws UserNotFoundException thrown when owner is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
+    @Operation(summary = "Create a new Rental")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Rental created",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Response.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid parameters",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+    })
     @PostMapping( value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<Response> createRental(
             @ModelAttribute @Valid NewRentalDTO newRentalDTO,
@@ -67,6 +101,21 @@ public class RentalController {
      * @return ResponseEntity<RentalsResponse>
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
+    @Operation(summary = "Get all rentals")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Rentals returned",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = RentalsResponse.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+    })
     @GetMapping("")
     public ResponseEntity<RentalsResponse> getAllRentals() throws ConverterDTOException {
         List<RentalDTO> rentals = rentalService.getAllRentals();
@@ -81,6 +130,33 @@ public class RentalController {
      * @throws RentalNotFoundException thrown when rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
+    @Operation(summary = "Get a rental by id")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Rental found and returned",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = RentalDTO.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid parameter",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Rental not found",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+    })
     @GetMapping("/{id}")
     public ResponseEntity<RentalDTO> getRentalById(@PathVariable("id") @NotNull @Positive long id)
             throws RentalNotFoundException, ConverterDTOException {
@@ -97,6 +173,33 @@ public class RentalController {
      * @throws RentalNotFoundException thrown when rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
+    @Operation(summary = "Update a rental")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Rental updated",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Response.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid parameters",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User or Rental not found",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+    })
     @PutMapping( value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<Response> updateRental(
             @PathVariable("id") @NotNull @Positive long id,
@@ -115,6 +218,33 @@ public class RentalController {
      * @throws FileNotFoundException thrown when file is not found.
      * @throws StorageException thrown when a storage exception occurred.
      */
+    @Operation(summary = "Load a picture")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Picture downloaded",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Resource.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid parameter",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Not authorized",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Picture not found",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Error.class))}),
+    })
     @GetMapping("/uploads/{filename}")
     public ResponseEntity<Resource> loadPicture(@PathVariable("filename") @NotBlank String filename)
             throws FileNotFoundException, StorageException {

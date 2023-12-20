@@ -2,7 +2,6 @@ package com.tipikae.chatop.configuration;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -81,7 +80,7 @@ public class SpringSecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher("/actuator/**", "/auth/register")
+                .securityMatcher("/actuator/**", "/auth/register", "/v3/api-docs/**", "/swagger-ui/**")
                 .authorizeHttpRequests(auth -> {
                     auth.anyRequest().permitAll();
                 })
@@ -96,13 +95,12 @@ public class SpringSecurityConfig {
      */
     @Bean
     @Order(3)
-    public SecurityFilterChain httpBasicFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authDelegatedFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityMatcher("/auth/login")
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                //.authenticationManager(authenticationManager(userDetailsService, passwordEncoder()))
                 .build();
     }
 
