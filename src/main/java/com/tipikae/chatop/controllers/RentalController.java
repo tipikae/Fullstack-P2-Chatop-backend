@@ -56,9 +56,10 @@ public class RentalController {
     /**
      * Create a rental.
      * @param newRentalDTO NewRentalDTO object.
-     * @return ResponseEntity<Response>
+     * @return ResponseEntity
      * @throws UserNotFoundException thrown when owner is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
+     * @throws StorageException thrown when a storage exception occurred.
      */
     @Operation(summary = "Create a new Rental")
     @ApiResponses({
@@ -101,7 +102,7 @@ public class RentalController {
 
     /**
      * Get all rentals.
-     * @return ResponseEntity<RentalsResponse>
+     * @return ResponseEntity
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @Operation(summary = "Get all rentals")
@@ -129,7 +130,7 @@ public class RentalController {
     /**
      * Get a rental by id.
      * @param id Rental's id.
-     * @return ResponseEntity<RentalDTO>
+     * @return ResponseEntity
      * @throws RentalNotFoundException thrown when rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
@@ -171,7 +172,7 @@ public class RentalController {
      * Update a rental.
      * @param id Rental's id.
      * @param updateRentalDTO UpdateRentalDTO object.
-     * @return ResponseEntity<Response>
+     * @return ResponseEntity
      * @throws UserNotFoundException thrown when owner is not found.
      * @throws RentalNotFoundException thrown when rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
@@ -217,7 +218,7 @@ public class RentalController {
     /**
      * Download a picture.
      * @param filename File name.
-     * @return ResponseEntity<Resource>
+     * @return ResponseEntity
      * @throws FileNotFoundException thrown when file is not found.
      * @throws StorageException thrown when a storage exception occurred.
      */

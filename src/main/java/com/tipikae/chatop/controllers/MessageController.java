@@ -39,7 +39,7 @@ public class MessageController {
     /**
      * Add a new message.
      * @param newMessageDTO NewMessageDTO object to add.
-     * @return ResponseEntity<Response>
+     * @return ResponseEntity
      * @throws UserNotFoundException thrown when a user is not found.
      * @throws RentalNotFoundException thrown whe a rental is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.

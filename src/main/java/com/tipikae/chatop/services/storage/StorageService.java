@@ -24,6 +24,11 @@ public class StorageService implements IStorageService {
 
     private final Path rootLocation;
 
+    /**
+     * Constructor.
+     * @param location Storage location.
+     * @throws StorageException thrown when the storage location name is empty.
+     */
     public StorageService(@Value("${spring.servlet.multipart.location}") String location) throws StorageException {
         if (location.trim().isEmpty()) {
             throw new StorageException("File upload location can not be empty.");
@@ -36,7 +41,7 @@ public class StorageService implements IStorageService {
      *
      * @param file MultipartFile object.
      * @return Stored file path String.
-     * @throws StorageException
+     * @throws StorageException thrown when an error occurred during storage.
      */
     @Override
     public String store(MultipartFile file) throws StorageException {

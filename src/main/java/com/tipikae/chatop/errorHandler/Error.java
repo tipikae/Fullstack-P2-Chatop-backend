@@ -19,6 +19,11 @@ public class Error implements Serializable {
     private String message;
     private Date timestamp;
 
+    /**
+     * Constructor.
+     * @param code Error code
+     * @param message String
+     */
     public Error(int code, String message) {
         this.code = code;
         this.message = message;

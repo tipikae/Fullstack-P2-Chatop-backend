@@ -65,7 +65,7 @@ public class RentalService implements IRentalService {
     /**
      * Get all rentals.
      *
-     * @return List<RentalDTO>
+     * @return List
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @Override

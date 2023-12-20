@@ -44,7 +44,7 @@ public interface IRentalDTOConverter {
     /**
      * Convert a list of Rental model to a list of RentalDTO.
      * @param rentals List of Rental model.
-     * @return List<RentalDTO>
+     * @return List
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     List<RentalDTO> convertModelsToRentalDTOs(List<Rental> rentals) throws ConverterDTOException;
