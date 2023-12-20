@@ -101,7 +101,7 @@ public class RentalDTOConverter implements IRentalDTOConverter{
      * Convert a list of Rental model to a list of RentalDTO.
      *
      * @param rentals List of Rental model.
-     * @return List<RentalDTO>
+     * @return List
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */
     @Override

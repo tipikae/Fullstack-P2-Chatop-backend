@@ -36,7 +36,7 @@ public class UserController {
     /**
      * Get a user by id.
      * @param id User's id.
-     * @return UserDTO
+     * @return ResponseEntity
      * @throws UserNotFoundException thrown when a user is not found.
      * @throws ConverterDTOException thrown when a converter exception occurred.
      */

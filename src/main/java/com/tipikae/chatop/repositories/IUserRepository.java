@@ -16,14 +16,14 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     /**
      * Find users by their email.
      * @param email String User's email.
-     * @return List<User>
+     * @return List
      */
     List<User> findByEmail(String email);
 
     /**
      * Find a user by its email.
      * @param email USer's email.
-     * @return Optional<User>
+     * @return Optional
      */
     Optional<User> findFirstByEmail(String email);
 }

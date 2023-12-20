@@ -36,6 +36,12 @@ public class SpringSecurityConfig {
     @Value("${jwt.key}")
     private String jwtKey;
 
+    /**
+     * Custom Authentication manager.
+     * @param userDetailsService Custom UserDetails Service.
+     * @param passwordEncoder Custom password encoder.
+     * @return AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             UserDetailsService userDetailsService,
@@ -51,7 +57,7 @@ public class SpringSecurityConfig {
      * Filter chain with no authentication required and without frame options header, order 1.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception thrown when a filter chain error occurred.
      */
     @Bean
     @Order(1)
@@ -72,7 +78,7 @@ public class SpringSecurityConfig {
      * Filter chain with no authentication required, order 2.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception thrown when a filter chain error occurred.
      */
     @Bean
     @Order(2)
@@ -91,7 +97,7 @@ public class SpringSecurityConfig {
      * Filter chain with basic authentication, order 3.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception thrown when a filter chain error occurred.
      */
     @Bean
     @Order(3)
@@ -108,7 +114,7 @@ public class SpringSecurityConfig {
      * Filter chain with jwt authentication, order 4.
      * @param http HttpSecurity object.
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception thrown when a filter chain error occurred.
      */
     @Bean
     @Order(4)

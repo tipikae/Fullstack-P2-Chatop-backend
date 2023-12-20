@@ -6,6 +6,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Error POJO returned by ControllerAdvice.
+ */
 @Data
 public class Error implements Serializable {
 
@@ -16,6 +19,11 @@ public class Error implements Serializable {
     private String message;
     private Date timestamp;
 
+    /**
+     * Constructor.
+     * @param code Error code
+     * @param message String
+     */
     public Error(int code, String message) {
         this.code = code;
         this.message = message;

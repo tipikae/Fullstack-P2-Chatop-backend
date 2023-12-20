@@ -10,6 +10,10 @@ public class ChatopException extends Exception {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructor.
+     * @param message String
+     */
     public ChatopException(String message) {
         super(message);
     }

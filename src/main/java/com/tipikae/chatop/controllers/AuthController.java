@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+/**
+ * authentication controller.
+ */
 @RestController
 @RequestMapping("/auth")
 @Validated
@@ -48,7 +51,7 @@ public class AuthController {
     /**
      * Login endpoint.
      * @param loginRequest LoginRequest object.
-     * @return ResponseEntity<Token>
+     * @return ResponseEntity
      * @throws AuthenticationException thrown when an authentication exception occurred.
      */
     @Operation(summary = "Login")
@@ -86,7 +89,7 @@ public class AuthController {
     /**
      * User registration endpoint.
      * @param newUserDTO User's information.
-     * @return ResponseEntity<Token>
+     * @return ResponseEntity
      * @throws UserAlreadyExistsException thrown when a user already exists.
      * @throws ConverterDTOException thrown when an DTO converter exception occurred.
      * @throws AuthenticationException thrown when an authentication exception occurred.
@@ -124,7 +127,7 @@ public class AuthController {
     /**
      * Get user's profile endpoint.
      * @param principal Principal object.
-     * @return ResponseEntity<UserDTO>
+     * @return ResponseEntity
      * @throws UserNotFoundException thrown when an DTO converter exception occurred.
      * @throws ConverterDTOException thrown when an DTO converter exception occurred.
      */
