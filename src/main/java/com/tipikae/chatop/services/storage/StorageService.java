@@ -22,6 +22,11 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class StorageService implements IStorageService {
 
+    @Value("${spring.mvc.servlet.path}")
+    private String prefix;
+
+    private final String endpoint = "/rentals";
+
     private final Path rootLocation;
 
     /**
@@ -57,7 +62,7 @@ public class StorageService implements IStorageService {
 
             return ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path(rootLocation.toString() + "/")
+                    .path(prefix + endpoint + "/" + rootLocation.toString() + "/")
                     .path(destinationFile.getFileName().toString())
                     .toUriString();
         } catch (Exception e) {
