@@ -1,6 +1,5 @@
 package com.tipikae.chatop.errorHandler;
 
-import com.tipikae.chatop.exceptions.AuthenticationException;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
 import com.tipikae.chatop.exceptions.storage.StorageException;
@@ -77,8 +76,20 @@ public class ControllerExceptionHandler {
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    Error exceptionHandler(AuthenticationException e) {
+    @ExceptionHandler(com.tipikae.chatop.exceptions.AuthenticationException.class)
+    Error exceptionHandler(com.tipikae.chatop.exceptions.AuthenticationException e) {
+        return new Error(HttpStatus.UNAUTHORIZED.value(), "Authentication error.");
+    }
+
+    /**
+     * AuthenticationException handler.
+     * @param e AuthenticationException object.
+     * @return Error 401
+     */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
+    Error exceptionHandler(org.springframework.security.core.AuthenticationException e) {
         return new Error(HttpStatus.UNAUTHORIZED.value(), "Authentication error.");
     }
 
