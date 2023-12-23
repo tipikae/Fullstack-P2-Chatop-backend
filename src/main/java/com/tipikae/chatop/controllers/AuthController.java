@@ -80,8 +80,7 @@ public class AuthController {
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getLogin(), loginRequest.getPassword());
         Authentication authenticationResponse =
                 authenticationManager.authenticate(authenticationRequest);
-        Token token = authService.generateTokenWithAuthentication(authenticationResponse);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        return new ResponseEntity<>(authService.generateTokenWithAuthentication(authenticationResponse), HttpStatus.OK);
     }
 
     /**
@@ -118,8 +117,7 @@ public class AuthController {
             throws UserAlreadyExistsException, ConverterDTOException, AuthenticationException {
 
         userService.createUser(newUserDTO);
-        Token token = authService.generateTokenWithEmail(newUserDTO.getEmail());
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        return new ResponseEntity<>(authService.generateTokenWithEmail(newUserDTO.getEmail()), HttpStatus.OK);
     }
 
     /**
@@ -152,8 +150,6 @@ public class AuthController {
     })
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me(Principal principal) throws UserNotFoundException, ConverterDTOException {
-        String email = principal.getName();
-        UserDTO userDTO = userService.getUserByEmail(email);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserByEmail(principal.getName()), HttpStatus.OK);
     }
 }

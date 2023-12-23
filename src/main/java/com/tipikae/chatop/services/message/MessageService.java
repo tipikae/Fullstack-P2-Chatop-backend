@@ -56,9 +56,8 @@ public class MessageService implements IMessageService {
             throw new RentalNotFoundException(String.format("Rental with id=%d is not found.", newMessageDTO.getRental_id()));
         }
 
-        Message message =
-                messageRepository.save(messageConverterDTO.convertNewMessageDTOTOModel(newMessageDTO, optionalUser.get(), optionalRental.get()));
-
-        return messageConverterDTO.convertMessageToDTO(message);
+        return messageConverterDTO.convertMessageToDTO(
+                messageRepository.save(
+                        messageConverterDTO.convertNewMessageDTOTOModel(newMessageDTO, optionalUser.get(), optionalRental.get())));
     }
 }

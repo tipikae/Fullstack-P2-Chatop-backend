@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -70,7 +69,6 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable("id") @NotNull @Positive long id)
             throws UserNotFoundException, ConverterDTOException {
-        UserDTO userDTO = userService.getUserById(id);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 }

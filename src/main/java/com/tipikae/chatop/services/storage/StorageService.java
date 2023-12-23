@@ -2,7 +2,6 @@ package com.tipikae.chatop.services.storage;
 
 import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
 import com.tipikae.chatop.exceptions.storage.StorageException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,9 +22,7 @@ import java.nio.file.StandardCopyOption;
 public class StorageService implements IStorageService {
 
     @Value("${spring.mvc.servlet.path}")
-    private String prefix;
-
-    private final String endpoint = "/rentals";
+    private String prefixApi;
 
     private final Path rootLocation;
 
@@ -62,7 +59,7 @@ public class StorageService implements IStorageService {
 
             return ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path(prefix + endpoint + "/" + rootLocation.toString() + "/")
+                    .path(prefixApi + "/rentals/" + rootLocation.toString() + "/")
                     .path(destinationFile.getFileName().toString())
                     .toUriString();
         } catch (Exception e) {

@@ -13,7 +13,6 @@ import com.tipikae.chatop.models.User;
 import com.tipikae.chatop.repositories.IRentalRepository;
 import com.tipikae.chatop.repositories.IUserRepository;
 import com.tipikae.chatop.services.storage.IStorageService;
-import com.tipikae.chatop.services.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,10 +55,10 @@ public class RentalService implements IRentalService {
             throw new UserNotFoundException(String.format("Owner with id=%d is not found.", ownerId));
         }
 
-        String pictureUrl = storageService.store(newRentalDTO.getPicture());
-        Rental rental = rentalDTOConverter.convertNewDTOToModel(newRentalDTO, optionalUser.get(), pictureUrl);
-
-        return rentalDTOConverter.convertModelToRentalDTO(rentalRepository.save(rental));
+        return rentalDTOConverter.convertModelToRentalDTO(
+                rentalRepository.save(
+                        rentalDTOConverter.convertNewDTOToModel(
+                                newRentalDTO, optionalUser.get(), storageService.store(newRentalDTO.getPicture()))));
     }
 
     /**
@@ -107,7 +106,6 @@ public class RentalService implements IRentalService {
             throw new RentalNotFoundException(String.format("Rental with id=%d is not found.", id));
         }
 
-        Rental rental = rentalDTOConverter.convertUpdateDTOToModel(updateRentalDTO, optionalRental.get());
-        rentalRepository.save(rental);
+        rentalRepository.save(rentalDTOConverter.convertUpdateDTOToModel(updateRentalDTO, optionalRental.get()));
     }
 }

@@ -3,7 +3,6 @@ package com.tipikae.chatop.controllers;
 import com.tipikae.chatop.dto.rental.NewRentalDTO;
 import com.tipikae.chatop.dto.rental.RentalDTO;
 import com.tipikae.chatop.dto.rental.UpdateRentalDTO;
-import com.tipikae.chatop.dto.user.UserDTO;
 import com.tipikae.chatop.errorHandler.Error;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
@@ -31,7 +30,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -96,8 +94,7 @@ public class RentalController {
 
         long ownerId = userService.getUserByEmail(principal.getName()).getId();
         rentalService.createRental(newRentalDTO, ownerId);
-        Response response = new Response("Rental created !");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new Response("Rental created !"), HttpStatus.OK);
     }
 
     /**
@@ -123,8 +120,7 @@ public class RentalController {
     @GetMapping("")
     public ResponseEntity<RentalsResponse> getAllRentals() throws ConverterDTOException {
         List<RentalDTO> rentals = rentalService.getAllRentals();
-        RentalsResponse rentalsResponse = new RentalsResponse(rentals);
-        return new ResponseEntity<>(rentalsResponse, HttpStatus.OK);
+        return new ResponseEntity<>(new RentalsResponse(rentals), HttpStatus.OK);
     }
 
     /**
@@ -164,8 +160,7 @@ public class RentalController {
     @GetMapping("/{id}")
     public ResponseEntity<RentalDTO> getRentalById(@PathVariable("id") @NotNull @Positive long id)
             throws RentalNotFoundException, ConverterDTOException {
-        RentalDTO rentalDTO = rentalService.getRentalById(id);
-        return new ResponseEntity<>(rentalDTO, HttpStatus.OK);
+        return new ResponseEntity<>(rentalService.getRentalById(id), HttpStatus.OK);
     }
 
     /**
@@ -211,8 +206,7 @@ public class RentalController {
                 throws UserNotFoundException, RentalNotFoundException, ConverterDTOException {
 
         rentalService.updateRental(id, updateRentalDTO);
-        Response response = new Response("Rental updated !");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new Response("Rental updated !"), HttpStatus.OK);
     }
 
     /**
@@ -252,7 +246,6 @@ public class RentalController {
     @GetMapping("/uploads/{filename}")
     public ResponseEntity<Resource> loadPicture(@PathVariable("filename") @NotBlank String filename)
             throws FileNotFoundException, StorageException {
-        Resource resource = storageService.load(filename);
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+        return new ResponseEntity<>(storageService.load(filename), HttpStatus.OK);
     }
 }

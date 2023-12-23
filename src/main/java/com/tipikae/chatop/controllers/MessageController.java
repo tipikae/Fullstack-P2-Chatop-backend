@@ -2,7 +2,6 @@ package com.tipikae.chatop.controllers;
 
 
 import com.tipikae.chatop.dto.message.NewMessageDTO;
-import com.tipikae.chatop.dto.user.UserDTO;
 import com.tipikae.chatop.errorHandler.Error;
 import com.tipikae.chatop.exceptions.ConverterDTOException;
 import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
@@ -76,7 +75,6 @@ public class MessageController {
             throws UserNotFoundException, RentalNotFoundException, ConverterDTOException {
 
         messageService.add(newMessageDTO);
-        Response response = new Response("Message send with success");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new Response("Message send with success"), HttpStatus.OK);
     }
 }
