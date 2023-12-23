@@ -28,15 +28,19 @@ Go to `sql` in the root directory and :
 Open `src/main/resources/application-prod.properties` and update `spring.datasource.username` and `spring.datasource.password` with your MySQL credentials.
 
 ## Run
-In the root directory execute `.gradlew build` to build the archive.
+In the root directory execute `gradle build` to build the archive.
 
-2 profiles are set: 
+Two points are important.
+
+First, 2 profiles are set: 
 * `dev` for development with in-memory database,
 * `prod` for production with MySQL database.
 
 Spring default profile is set to `dev`.
 
-Go to `build/libs` and run `java -Dspring.profiles.active=prod -jar chatop-backend-1.0.0.jar`.
+The second point is that you have to create an `uploads` directory where the archive is located.
+
+In our case, go to `build/libs`, create `uploads` directory and run `java -Dspring.profiles.active=prod -jar chatop-backend-1.0.0.jar`.
 
 You can use an app like Postman to test the endpoints.
 
@@ -81,7 +85,7 @@ You can use an app like Postman to test the endpoints.
 Navigate to `build/reports/tests/test/index.html` to see the tests results.
 ## Documentation
 ### Javadoc
-Execute `.gradlew javadoc` to generate the documentation.
+Execute `gradle javadoc` to generate the documentation.
 
 Navigate to `build/docs/javadoc/inde.html` to browse the documentation.
 ### Swagger
