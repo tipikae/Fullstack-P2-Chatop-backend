@@ -1,6 +1,7 @@
 package com.tipikae.chatop.errorHandler;
 
 import com.tipikae.chatop.exceptions.ConverterDTOException;
+import com.tipikae.chatop.exceptions.rental.RentalNotFoundException;
 import com.tipikae.chatop.exceptions.storage.FileNotFoundException;
 import com.tipikae.chatop.exceptions.storage.StorageException;
 import com.tipikae.chatop.exceptions.user.UserAlreadyExistsException;
@@ -103,6 +104,18 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     Error exceptionHandler(UserNotFoundException e) {
         return new Error(HttpStatus.NOT_FOUND.value(), "User not found.");
+    }
+
+    /**
+     * RentalNotFoundException handler.
+     * @param e RentalNotFoundException object.
+     * @return Error 404
+     */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RentalNotFoundException.class)
+    Error exceptionHandler(RentalNotFoundException e) {
+        return new Error(HttpStatus.NOT_FOUND.value(), "Rental not found.");
     }
 
     /**
