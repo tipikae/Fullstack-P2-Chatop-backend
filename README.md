@@ -87,7 +87,7 @@ Navigate to `build/reports/tests/test/index.html` to see the tests results.
 ### Javadoc
 Execute `gradle javadoc` to generate the documentation.
 
-Navigate to `build/docs/javadoc/inde.html` to browse the documentation.
+Navigate to `build/docs/javadoc/index.html` to browse the documentation.
 ### Swagger
 To see the API documentation, when this app is launched, in your web browser go to `http://localhost:3001/api/swagger-ui/index.html`
 ## Author
